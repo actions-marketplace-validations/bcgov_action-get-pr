@@ -5,37 +5,17 @@ branding:
   color: blue
 
 inputs:
-  ### Required
-  # Nothing!
-
-  ### Typical / recommended
-  # Nothing!
-
-  ### Usually a bad idea / not recommended
   debug:
     description: Enable debug logging
     default: "false"
-  token:
+  github_token:
     description: Specify token (GH or PAT), instead of inheriting one from the calling workflow
     default: ${{ github.token }}
 
 outputs:
   pr:
     description: "Associated pull request number"
-    value: ${{ steps.vars.outputs.pr }}
 
 runs:
-  using: composite
-  steps:
-    - uses: actions/checkout@v6
-
-    - id: vars
-      shell: bash
-      env:
-        INPUT_DEBUG: ${{ inputs.debug }}
-        INPUT_TOKEN: ${{ inputs.token }}
-        MERGE_GROUP_HEAD_REF: ${{ github.event.merge_group.head_ref }}
-        GITHUB_EVENT_AFTER: ${{ github.event.after }}
-        GITHUB_EVENT_NUMBER: ${{ github.event.number }}
-      run: |
-        ${{ github.action_path }}/action.sh
+  using: node24
+  main: index.js
